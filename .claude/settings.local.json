@@ -21,7 +21,12 @@
       "Bash(npx tsc:*)",
       "Bash(rsync:*)",
       "Bash(docker system prune:*)",
-      "Bash(npm start)"
+      "Bash(npm start)",
+      "Bash(ng serve:*)",
+      "Bash(docker restart:*)",
+      "Bash(docker logs:*)",
+      "Bash(pip install:*)",
+      "Bash(docker cp:*)"
     ],
     "deny": [],
     "ask": []

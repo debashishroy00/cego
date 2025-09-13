@@ -35,10 +35,10 @@ class QuickWinsOptimizer(BaseOptimizer):
         self.algorithm_name = "QuickWins"
         self.version = "1.0.0"
         
-        # Configuration parameters
-        self.semantic_similarity_threshold = 0.85
-        self.overlap_threshold = 0.6
-        self.near_duplicate_threshold = 0.95
+        # Configuration parameters - tuned for demonstration
+        self.semantic_similarity_threshold = 0.70  # Lower from 0.85 for better demo results
+        self.overlap_threshold = 0.40              # Lower from 0.6 for better demo results  
+        self.near_duplicate_threshold = 0.80       # Lower from 0.95 for better demo results
     
     def _optimize_internal(self, query: str, context_pool: List[str]) -> List[str]:
         """

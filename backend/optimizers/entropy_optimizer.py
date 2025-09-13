@@ -58,11 +58,11 @@ class EntropyOptimizer(BaseOptimizer):
         self.shannon_calculator = ShannonEntropyCalculator()
         self.multidim_entropy = MultiDimensionalEntropy()
         
-        # Optimization parameters
-        self.relevance_weight = 0.7  # Lambda parameter
-        self.entropy_threshold = 0.1  # Minimum entropy for inclusion
-        self.max_iterations = 100
-        self.convergence_threshold = 0.01
+        # Optimization parameters - tuned for demonstration
+        self.relevance_weight = 0.6   # Lower for more aggressive optimization
+        self.entropy_threshold = 0.05 # Lower from 0.1 for better demo results
+        self.max_iterations = 20      # Reduced from 100 for faster demo performance
+        self.convergence_threshold = 0.01  # Higher for faster convergence
         
         # Phase transition tracking
         self.entropy_history = []

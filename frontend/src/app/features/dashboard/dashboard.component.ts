@@ -58,6 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   scenarios: TestScenario[] = [];
   selectedScenario: TestScenario | null = null;
 
+
   constructor(
     private cegoApi: CegoApiService,
     private scenarioManager: ScenarioManagerService
@@ -226,12 +227,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return (tokensSaved * costPerToken) / 1000;
   }
 
+  abs(value: number): number {
+    return Math.abs(value);
+  }
+
   getScenariosByCategory(category: string): TestScenario[] {
     return this.scenarioManager.getScenariosByCategory(category);
   }
 
   // Helper for template
   Object = Object;
+  Math = Math;
 
   exportResults(): void {
     if (!this.comparisonResult) return;
