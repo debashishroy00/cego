@@ -9,8 +9,8 @@ import unittest
 import numpy as np
 from datetime import datetime, timezone
 
-from src.core.entropy.shannon_calculator import ShannonEntropyCalculator, EntropyResult
-from src.core.entropy.multi_dimensional import (
+from backend.core.entropy.shannon_calculator import ShannonEntropyCalculator, EntropyResult
+from backend.core.entropy.multi_dimensional import (
     MultiDimensionalEntropy, 
     ContentPiece, 
     content_pieces_from_strings

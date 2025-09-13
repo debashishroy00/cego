@@ -21,6 +21,9 @@ RUN mkdir -p /app/models /app/data /app/logs
 # Make sure scripts are in PATH
 ENV PATH=/root/.local/bin:$PATH
 
+# Set Python path to include backend
+ENV PYTHONPATH=/app
+
 # Create non-root user for security
 RUN groupadd -r cego && useradd -r -g cego cego
 RUN chown -R cego:cego /app

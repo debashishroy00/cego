@@ -6,8 +6,8 @@ and chunk overlap removal following CEGO testing requirements.
 """
 
 import pytest
-from src.optimizers.quick_wins import QuickWinsOptimizer
-from src.api.quick_wins_api import QuickWinsAPI
+from backend.optimizers.quick_wins import QuickWinsOptimizer
+from backend.api.quick_wins_api import QuickWinsAPI
 
 
 class TestQuickWinsOptimizer:

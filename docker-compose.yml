@@ -16,8 +16,8 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
       - WATCHDOG_ENABLE=true
       - MAX_WORKERS=2
-      - MEMORY_LIMIT_MB=512
-      - CACHE_SIZE_MB=128
+      - MEMORY_LIMIT_MB=1024
+      - CACHE_SIZE_MB=256
     ports:
       - "8001:8000"  # CEGO Dev API on 8001
       - "9091:9090"  # CEGO Dev Metrics on 9091

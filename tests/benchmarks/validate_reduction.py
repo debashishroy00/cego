@@ -9,11 +9,11 @@ import sys
 import time
 from pathlib import Path
 
-# Add src to Python path
-sys.path.append(str(Path(__file__).parent.parent.parent / "src"))
+# Add backend to Python path
+sys.path.append(str(Path(__file__).parent.parent.parent / "backend"))
 
-from src.optimizers.quick_wins import QuickWinsOptimizer
-from src.validators.golden_queries import GoldenQueryValidator
+from backend.optimizers.quick_wins import QuickWinsOptimizer
+from backend.validators.golden_queries import GoldenQueryValidator
 
 
 def main():

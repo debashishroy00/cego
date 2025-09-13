@@ -14,10 +14,14 @@ COPY requirements-dev.txt .
 RUN pip install --no-cache-dir -r requirements-dev.txt
 
 # Copy source code
-COPY . .
+COPY backend/ ./backend/
+COPY tests/ ./tests/
 
 # Create necessary directories
 RUN mkdir -p /app/models /app/data /app/logs
+
+# Set Python path to include backend
+ENV PYTHONPATH=/app
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

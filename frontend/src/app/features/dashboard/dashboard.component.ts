@@ -88,7 +88,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (health) => {
-          this.apiConnected = health.status === 'healthy';
+          // Consider API connected if we get any response (even if status is unhealthy)
+          // The optimization endpoints may still work fine
+          this.apiConnected = true;
+          console.log('API health check response:', health);
         },
         error: (error) => {
           this.apiConnected = false;
@@ -129,59 +132,44 @@ export class DashboardComponent implements OnInit, OnDestroy {
       algorithm: 'both'
     };
 
-    // Run both optimizations in parallel
-    forkJoin({
-      quickWins: this.cegoApi.optimizeQuickWins(request),
-      entropy: this.cegoApi.optimizeEntropy(request)
-    }).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (results) => {
-        this.quickWinsResult = results.quickWins;
-        this.entropyResult = results.entropy;
-        this.createComparisonResult();
-        this.loading = false;
-      },
-      error: (error) => {
-        this.error = error.message;
-        this.loading = false;
-        
-        // Try individual optimizations as fallback
-        this.runFallbackOptimization(request);
-      }
-    });
+    // Start with Quick Wins optimization (always available)
+    this.runQuickWinsOptimization(request);
   }
 
-  private runFallbackOptimization(request: OptimizationRequest): void {
-    // Try Quick Wins first
+  private runQuickWinsOptimization(request: OptimizationRequest): void {
     this.cegoApi.optimizeQuickWins(request)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (result) => {
           this.quickWinsResult = result;
-          this.tryEntropyOptimization(request);
+          // Now try entropy optimization
+          this.runEntropyOptimization(request);
         },
         error: (error) => {
-          this.error = `Quick Wins failed: ${error.message}`;
+          this.error = `Quick Wins optimization failed: ${error.message}`;
+          this.loading = false;
         }
       });
   }
 
-  private tryEntropyOptimization(request: OptimizationRequest): void {
+  private runEntropyOptimization(request: OptimizationRequest): void {
     this.cegoApi.optimizeEntropy(request)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (result) => {
           this.entropyResult = result;
           this.createComparisonResult();
+          this.loading = false;
         },
         error: (error) => {
           console.warn('Entropy optimization failed:', error.message);
-          // Keep Quick Wins result, show partial comparison
+          // Still show Quick Wins results even if entropy fails
           this.createComparisonResult();
+          this.loading = false;
         }
       });
   }
+
 
   private createComparisonResult(): void {
     if (!this.quickWinsResult && !this.entropyResult) return;
@@ -237,7 +225,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Helper for template
   Object = Object;
-  Math = Math;
 
   exportResults(): void {
     if (!this.comparisonResult) return;

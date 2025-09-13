@@ -8,7 +8,7 @@ for entropy calculation and optimization services.
 import unittest
 from unittest.mock import patch, MagicMock
 
-from src.api.entropy_api import EntropyAPI
+from backend.api.entropy_api import EntropyAPI
 
 
 class TestEntropyAPI(unittest.TestCase):
@@ -188,8 +188,8 @@ class TestEntropyAPI(unittest.TestCase):
     def test_optimization_recommendations_generation(self):
         """Test generation of optimization recommendations."""
         # Mock entropy results
-        from src.core.entropy.shannon_calculator import EntropyResult
-        from src.core.entropy.multi_dimensional import MultiDimensionalResult
+        from backend.core.entropy.shannon_calculator import EntropyResult
+        from backend.core.entropy.multi_dimensional import MultiDimensionalResult
         
         shannon_result = EntropyResult(
             value=2.5,
@@ -259,8 +259,8 @@ class TestEntropyAPI(unittest.TestCase):
     
     def test_recommendations_for_low_entropy(self):
         """Test recommendations for low entropy content."""
-        from src.core.entropy.shannon_calculator import EntropyResult
-        from src.core.entropy.multi_dimensional import MultiDimensionalResult
+        from backend.core.entropy.shannon_calculator import EntropyResult
+        from backend.core.entropy.multi_dimensional import MultiDimensionalResult
         
         # Low entropy scenario
         shannon_result = EntropyResult(
@@ -292,8 +292,8 @@ class TestEntropyAPI(unittest.TestCase):
     
     def test_recommendations_for_high_entropy(self):
         """Test recommendations for high entropy content."""
-        from src.core.entropy.shannon_calculator import EntropyResult
-        from src.core.entropy.multi_dimensional import MultiDimensionalResult
+        from backend.core.entropy.shannon_calculator import EntropyResult
+        from backend.core.entropy.multi_dimensional import MultiDimensionalResult
         
         # High entropy scenario
         shannon_result = EntropyResult(

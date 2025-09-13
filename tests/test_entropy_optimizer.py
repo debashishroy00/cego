@@ -8,7 +8,7 @@ multi-dimensional entropy analysis with gradient descent optimization.
 import unittest
 from typing import List
 
-from src.optimizers.entropy_optimizer import EntropyOptimizer, EntropyOptimizationResult
+from backend.optimizers.entropy_optimizer import EntropyOptimizer, EntropyOptimizationResult
 
 
 class TestEntropyOptimizer(unittest.TestCase):
@@ -219,7 +219,7 @@ class TestEntropyOptimizer(unittest.TestCase):
         ]
         
         # Mock entropy result for testing
-        from src.core.entropy.multi_dimensional import MultiDimensionalResult
+        from backend.core.entropy.multi_dimensional import MultiDimensionalResult
         entropy_result = MultiDimensionalResult(
             total_entropy=2.5,
             dimension_entropies={'semantic': 2.0, 'temporal': 0.5, 'relational': 0.0, 'structural': 1.0},

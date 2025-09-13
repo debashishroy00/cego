@@ -26,7 +26,16 @@
       "Bash(docker restart:*)",
       "Bash(docker logs:*)",
       "Bash(pip install:*)",
-      "Bash(docker cp:*)"
+      "Bash(docker cp:*)",
+      "Bash(taskkill:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(netstat:*)",
+      "Bash(cat:*)",
+      "Bash(docker build:*)",
+      "Bash(chmod:*)",
+      "Bash(docker rmi:*)",
+      "Bash(npx playwright install:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []
