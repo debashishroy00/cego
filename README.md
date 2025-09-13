@@ -330,7 +330,7 @@ docker-compose build --no-cache cego-dev
 
 Proprietary & Confidential - Patent Pending
 
----
+----
 
 **Contact**: Development Team  
 **Dashboard Documentation**: See `frontend/README.md`  
