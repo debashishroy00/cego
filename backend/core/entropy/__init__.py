@@ -1,0 +1,1 @@
+"""Entropy calculation components for CEGO optimization."""

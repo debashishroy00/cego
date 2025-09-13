@@ -1,0 +1,32 @@
+# CEGO Development Requirements
+# All dependencies for development environment
+
+# Core API framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+
+# System monitoring
+psutil>=5.9.0
+
+# Development and testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-watch>=4.2.0
+pytest-asyncio>=0.21.0
+
+# Development tools
+black>=23.0.0
+flake8>=6.0.0
+radon>=6.0.1
+mypy>=1.0.0
+
+# HTTP client for testing
+requests>=2.31.0
+
+# Week 2 entropy features
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Hot reload support
+watchdog>=3.0.0
