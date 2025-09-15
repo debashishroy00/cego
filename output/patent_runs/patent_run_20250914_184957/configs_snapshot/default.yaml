@@ -1,0 +1,55 @@
+# CEGO Benchmark Default Configuration
+
+# Optimization endpoint URLs
+endpoints:
+  pattern: "http://127.0.0.1:8003/optimize"
+  entropy: "http://127.0.0.1:8003/optimize/entropy"
+
+# Request settings
+timeout: 30.0
+max_retries: 3
+retry_delay: 1.0
+
+# Dataset files to include in benchmark
+datasets:
+  - "cego_bench/datasets/insurance.jsonl"
+  - "cego_bench/datasets/sdlc.jsonl"
+  - "cego_bench/datasets/mixed.jsonl"
+  - "cego_bench/datasets/noisy.jsonl"
+  - "cego_bench/datasets/dupes.jsonl"
+  - "cego_bench/datasets/format.jsonl"
+
+# Scoring configuration
+scoring:
+  method_order: ["embed", "tfidf", "rouge"]
+  embed_model: "all-MiniLM-L6-v2"
+
+# Benchmark run parameters
+runs:
+  repeat: 3  # Number of times to repeat each test
+  max_items: 50  # Maximum items per test case
+
+# Reporting settings
+reporting:
+  save_html: true
+  save_artifacts: true
+  save_csv: true
+
+# Acceptance gate thresholds
+acceptance_gates:
+  entropy:
+    min_reduction_median: 60.0  # Minimum median reduction percentage
+    min_retention_mean: 0.92    # Minimum mean retention score
+    max_junk_kept_rate: 0.10    # Maximum junk kept rate
+  pattern:
+    min_reduction_median: 20.0  # Minimum median reduction percentage
+    min_retention_mean: 0.90    # Minimum mean retention score
+    max_junk_kept_rate: 0.15    # Maximum junk kept rate
+  general:
+    min_intent_preservation: 0.95  # Minimum intent preservation rate
+    max_latency_ratio: 1.25        # Maximum entropy/pattern latency ratio
+
+# Output configuration
+output:
+  base_dir: "output/runs"
+  include_timestamp: true

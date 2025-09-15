@@ -1,0 +1,72 @@
+{
+  "config": {
+    "endpoints": {
+      "pattern": "http://127.0.0.1:8003/optimize/pattern",
+      "entropy": "http://127.0.0.1:8003/optimize/entropy"
+    },
+    "timeout": 30.0,
+    "max_retries": 3,
+    "retry_delay": 1.0,
+    "datasets": [
+      "cego_bench/datasets/insurance.jsonl",
+      "cego_bench/datasets/sdlc.jsonl",
+      "cego_bench/datasets/mixed.jsonl",
+      "cego_bench/datasets/noisy.jsonl",
+      "cego_bench/datasets/dupes.jsonl",
+      "cego_bench/datasets/format.jsonl"
+    ],
+    "scoring": {
+      "method_order": [
+        "embed",
+        "tfidf",
+        "rouge"
+      ],
+      "embed_model": "all-MiniLM-L6-v2"
+    },
+    "runs": {
+      "repeat": 3,
+      "max_items": 50
+    },
+    "reporting": {
+      "save_html": true,
+      "save_artifacts": true,
+      "save_csv": true
+    },
+    "acceptance_gates": {
+      "entropy": {
+        "min_reduction_median": 60.0,
+        "min_retention_mean": 0.92,
+        "max_junk_kept_rate": 0.1
+      },
+      "pattern": {
+        "min_reduction_median": 20.0,
+        "min_retention_mean": 0.9,
+        "max_junk_kept_rate": 0.15
+      },
+      "general": {
+        "min_intent_preservation": 0.95,
+        "max_latency_ratio": 1.25
+      }
+    },
+    "output": {
+      "base_dir": "output/runs",
+      "include_timestamp": true
+    }
+  },
+  "config_file": "cego_bench\\configs\\default.yaml",
+  "timestamp": "2025-09-14T18:14:18.035337",
+  "python_version": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "platform": "win32",
+  "working_directory": "C:\\Users\\DR\\OneDrive\\projects\\cego",
+  "git": {
+    "commit": "d5c83fd0344098bbd3295f4d07f6a908e7579199",
+    "branch": "main"
+  },
+  "packages": {
+    "numpy": "2.3.1",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.6.1",
+    "matplotlib": "3.10.6",
+    "requests": "2.32.5"
+  }
+}

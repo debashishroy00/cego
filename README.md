@@ -33,18 +33,23 @@ cego/
 │   │       └── components/     # Reusable UI components
 │   ├── package.json
 │   └── README.md               # Dashboard documentation
-├── backend/                     # CEGO API (Port 8001)
+├── backend/                     # CEGO API (Port 8003)
 │   ├── api/                    # FastAPI interface
-│   ├── core/                   # Core algorithms
-│   ├── optimizers/             # Quick Wins & Entropy optimizers
-│   ├── validators/             # Golden query validation
-│   └── utils/                  # Resource monitoring & utilities
-├── tests/                       # Comprehensive test suite
-├── docs/                        # Documentation
-├── configs/                     # Configuration files
-├── data/                        # Test data & benchmarks
-├── docker-compose.yml           # Container orchestration
-└── requirements*.txt            # Python dependencies
+│   ├── core/                   # Core algorithms and refinements
+│   ├── optimizers/             # Pattern & Entropy optimizers
+│   └── utils/                  # Utilities and helpers
+├── cego_bench/                  # Benchmark harness (refined)
+│   ├── runners/                # Benchmark execution
+│   ├── reporting/              # Report generation
+│   └── configs/                # Test configurations
+├── reports/                     # Patent evidence documentation
+│   ├── annexes/                # Refined annexes A-H
+│   └── REFINEMENT_SUMMARY.md   # Implementation summary
+├── docs/                        # Technical documentation
+├── claude-orchestrator/         # Claude integration
+├── test_all_refinements.py      # Main validation test
+├── start_backend.bat           # Backend launcher
+└── requirements.txt            # Python dependencies
 ```
 
 ## Quick Start

@@ -1,0 +1,3 @@
+optimizer,success_rate,reduction_median,reduction_mean,retention_mean,retention_min,latency_p90,junk_kept_rate_median,intent_preservation_rate,confidence_mean,total_runs
+pattern,1.0,0.5977498869289914,0.5912466388909634,0.06,0.0,16.666140011511743,0.0,1.0,,150
+entropy,1.0,0.8028683047188239,0.7991784262664046,0.04,0.0,21.132379985647276,0.0,0.86,0.17885,150

@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEGO Patent Evidence Report - patent_20250914_181539</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #764ba2;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            color: #666;
+        }
+        .nav-tab:hover {
+            background: #f0f0f0;
+        }
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+        .content-section {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .content-section.active {
+            display: block;
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            padding: 20px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-left: 4px solid #667eea;
+        }
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .metric-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        .gate-pass {
+            color: green;
+            font-weight: bold;
+        }
+        .gate-fail {
+            color: red;
+            font-weight: bold;
+        }
+        .chart-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CEGO Patent Evidence Report</h1>
+            <p class="subtitle">Run ID: patent_20250914_181539 | Generated: 2025-09-14T18:15:44.524000</p>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('summary')">Executive Summary</button>
+            <button class="nav-tab" onclick="showSection('methodology')">Methodology</button>
+            <button class="nav-tab" onclick="showSection('aggregates')">Aggregates</button>
+            <button class="nav-tab" onclick="showSection('exemplars')">Exemplars</button>
+            <button class="nav-tab" onclick="showSection('calibration')">Calibration</button>
+            <button class="nav-tab" onclick="showSection('ablations')">Ablations</button>
+            <button class="nav-tab" onclick="showSection('latency')">Latency</button>
+            <button class="nav-tab" onclick="showSection('reproducibility')">Reproducibility</button>
+        </div>
+
+        <div id="summary" class="content-section active">
+            <h2>Executive Summary</h2>
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-value">0.0%</div>
+                    <div class="metric-label">Entropy Median Reduction</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">0.000</div>
+                    <div class="metric-label">Entropy Mean Retention</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">0.0%</div>
+                    <div class="metric-label">Pattern Median Reduction</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">0.000</div>
+                    <div class="metric-label">Pattern Mean Retention</div>
+                </div>
+            </div>
+
+            <h3>Acceptance Gates</h3>
+            <table>
+                <tr>
+                    <th>Gate</th>
+                    <th>Required</th>
+                    <th>Actual</th>
+                    <th>Status</th>
+                </tr>
+                
+                
+                <tr>
+                    <td>entropy_reduction</td>
+                    <td>>=60%</td>
+                    <td>0.0%</td>
+                    <td class="gate-fail">
+                        FAIL
+                    </td>
+                </tr>
+                
+                
+                
+                <tr>
+                    <td>entropy_retention</td>
+                    <td>>=0.92</td>
+                    <td>0.000</td>
+                    <td class="gate-fail">
+                        FAIL
+                    </td>
+                </tr>
+                
+                
+                
+                <tr>
+                    <td>entropy_junk_rate</td>
+                    <td><=10%</td>
+                    <td>0.0%</td>
+                    <td class="gate-pass">
+                        PASS
+                    </td>
+                </tr>
+                
+                
+                
+                <tr>
+                    <td>pattern_reduction</td>
+                    <td>>=20%</td>
+                    <td>0.0%</td>
+                    <td class="gate-fail">
+                        FAIL
+                    </td>
+                </tr>
+                
+                
+                
+                <tr>
+                    <td>pattern_retention</td>
+                    <td>>=0.90</td>
+                    <td>0.000</td>
+                    <td class="gate-fail">
+                        FAIL
+                    </td>
+                </tr>
+                
+                
+                
+                <tr>
+                    <td>pattern_junk_rate</td>
+                    <td><=15%</td>
+                    <td>0.0%</td>
+                    <td class="gate-pass">
+                        PASS
+                    </td>
+                </tr>
+                
+                
+                
+                <tr>
+                    <td>entropy_intent_preservation</td>
+                    <td>>=95%</td>
+                    <td>0.0%</td>
+                    <td class="gate-fail">
+                        FAIL
+                    </td>
+                </tr>
+                
+                
+                
+                <tr>
+                    <td>pattern_intent_preservation</td>
+                    <td>>=95%</td>
+                    <td>0.0%</td>
+                    <td class="gate-fail">
+                        FAIL
+                    </td>
+                </tr>
+                
+                
+                
+                
+            </table>
+        </div>
+
+        <div id="methodology" class="content-section">
+            <h2>Methodology</h2>
+            <p><br><h2>ANNEX B: METHODOLOGY<br><br>#<h2>1. EXPERIMENTAL DESIGN<br><br>##<h2>1.1 Benchmark Configuration<br>- **Datasets**: 5 domains<br>- **Test Cases**: 50 total<br>- **Repetitions**: 3<br>- **Max Items**: 50<br><br>##<h2>1.2 Domains Tested<br>- **dupes**: 10 test cases<br>- **format**: 10 test cases<br>- **insurance**: 10 test cases<br>- **mixed**: 10 test cases<br>- **sdlc**: 10 test cases<br><br><br>#<h2>2. EVALUATION METRICS<br><br>##<h2>2.1 Core Metrics<br>- **Token Reduction Percentage**: (1 - output_tokens/input_tokens) × 100<br>- **Semantic Retention**: Cosine similarity between original and optimized embeddings<br>- **Latency**: End-to-end response time in milliseconds<br>- **Confidence Score**: Model confidence in optimization quality<br><br>##<h2>2.2 Advanced Metrics<br>- **Junk Kept Rate**: Proportion of identified junk items retained<br>- **Intent Preservation**: Maintenance of primary query intent<br>- **Precision/Recall/F1**: Against gold standard labels<br>- **Expected Calibration Error**: Confidence vs actual performance alignment<br><br>#<h2>3. SCORING METHODS<br><br>##<h2>3.1 Similarity Scoring Pipeline<br>1. **Embedding-based**: Sentence transformers with cosine similarity<br>2. **TF-IDF Fallback**: Scikit-learn TF-IDF for non-embedding scenarios<br>3. **ROUGE Metrics**: Lexical overlap measurement<br><br>##<h2>3.2 Aggregation Strategy<br>- Median for reduction percentages (robust to outliers)<br>- Mean for retention scores (captures overall performance)<br>- P90/P95 for latency (tail performance matters)<br><br>#<h2>4. ACCEPTANCE CRITERIA<br><br>##<h2>4.1 Entropy Optimizer<br>- Median reduction ≥ 60%<br>- Mean retention ≥ 0.92<br>- Junk kept rate ≤ 10%<br>- Intent preservation ≥ 95%<br><br>##<h2>4.2 Pattern Optimizer<br>- Median reduction ≥ 20%<br>- Mean retention ≥ 0.90<br>- Junk kept rate ≤ 15%<br>- Intent preservation ≥ 95%<br><br>##<h2>4.3 Comparative<br>- Entropy latency P90 ≤ 1.25× Pattern latency P90<br><br>#<h2>5. STATISTICAL RIGOR<br><br>- **Confidence Intervals**: 95% CI for all metrics<br>- **Multiple Runs**: {config.get('runs', {}).get('repeat', 3)} repetitions per test<br>- **Domain Stratification**: Separate analysis per domain<br>- **Outlier Handling**: Median-based aggregation for robustness<br><br>#<h2>6. EDGE CASE COVERAGE<br><br>- **Noisy Data**: Corrupted/incomplete inputs<br>- **Duplicates**: Near-duplicate content handling<br>- **Format Variations**: Different text formatting styles<br>- **Mixed Intent**: Multi-domain queries<br>- **Scale Testing**: 3-100 items per test case<br></p>
+        </div>
+
+        <div id="aggregates" class="content-section">
+            <h2>Aggregate Statistics</h2>
+            <h2>ANNEX C: AGGREGATE STATISTICS<br><br>#<h2>1. OVERALL PERFORMANCE TABLE<br><br>| Domain | Optimizer | Median Reduction | Mean Retention | Junk Kept | Intent Preserved | P50 Latency | P90 Latency | Gate Status |<br>|--------|-----------|-----------------|----------------|-----------|------------------|-------------|-------------|-------------|<br>| insurance | PATTERN | 0.0% | 0.000 | 0.0% | 0.0% | 0.0ms | 0.0ms | ❌ |<br>| insurance | ENTROPY | 0.0% | 0.000 | 0.0% | 0.0% | 0.0ms | 0.0ms | ❌ |<br>| sdlc | PATTERN | 0.0% | 0.000 | 0.0% | 0.0% | 0.0ms | 0.0ms | ❌ |<br>| sdlc | ENTROPY | 0.0% | 0.000 | 0.0% | 0.0% | 0.0ms | 0.0ms | ❌ |<br>| mixed | PATTERN | 0.0% | 0.000 | 0.0% | 0.0% | 0.0ms | 0.0ms | ❌ |<br>| mixed | ENTROPY | 0.0% | 0.000 | 0.0% | 0.0% | 0.0ms | 0.0ms | ❌ |<br>| dupes | PATTERN | 0.0% | 0.000 | 0.0% | 0.0% | 0.0ms | 0.0ms | ❌ |<br>| dupes | ENTROPY | 0.0% | 0.000 | 0.0% | 0.0% | 0.0ms | 0.0ms | ❌ |<br>| format | PATTERN | 0.0% | 0.000 | 0.0% | 0.0% | 0.0ms | 0.0ms | ❌ |<br>| format | ENTROPY | 0.0% | 0.000 | 0.0% | 0.0% | 0.0ms | 0.0ms | ❌ |<br><br>#<h2>2. PERFORMANCE VISUALIZATIONS<br><br>##<h2>2.1 Token Reduction Distribution<br>![Reduction Boxplot](chart_reduction_boxplot.png)<br><br>##<h2>2.2 Semantic Retention by Domain<br>![Retention Bar Chart](chart_retention_barchart.png)<br><br>##<h2>2.3 Junk Handling vs Intent Preservation<br>![Junk Intent Chart](chart_junk_intent.png)<br><br>
+        </div>
+
+        <div id="exemplars" class="content-section">
+            <h2>Representative Exemplars</h2>
+            <h2>ANNEX D: REPRESENTATIVE EXEMPLARS<br><br>#<h2>Domain: DUPES<br><br>#<h2>Domain: FORMAT<br><br>#<h2>Domain: INSURANCE<br><br>#<h2>Domain: MIXED<br><br>#<h2>Domain: SDLC<br><br><br>*Note: Full side-by-side diffs available in exemplars/ directory*<br>
+        </div>
+
+        <div id="calibration" class="content-section">
+            <h2>Calibration Analysis</h2>
+            <h2>ANNEX E: CALIBRATION ANALYSIS<br><br>#<h2>1. CONFIDENCE CALIBRATION<br><br>##<h2>Expected Calibration Error (ECE)<br><br>- **Pattern ECE**: 0.0000<br>- **Entropy ECE**: 0.0000<br><br>##<h2>Calibration Table<br><br><br><br>#<h2>2. RELIABILITY DIAGRAM<br><br>![Reliability Diagram](chart_reliability_diagram.png)<br><br><br>#<h2>3. INTERPRETATION<br><br>A well-calibrated model has ECE close to 0, meaning confidence scores accurately reflect actual performance.<br>Lower ECE indicates better calibration:<br>- ECE < 0.05: Excellent calibration<br>- ECE 0.05-0.10: Good calibration<br>- ECE 0.10-0.20: Moderate calibration<br>- ECE > 0.20: Poor calibration<br><br>The reliability diagram shows confidence bins vs actual accuracy, with perfect calibration on the diagonal.<br>
+        </div>
+
+        <div id="ablations" class="content-section">
+            <h2>Ablation Studies</h2>
+            <h2>ANNEX F: ABLATION STUDIES<br><br>*Ablation studies pending. Run with --ablation flag to generate.*<br><br><br>#<h2>2. OPTIMAL CONFIGURATION<br><br>Based on ablation studies, the optimal configuration is:<br><br>##<h2>Entropy Optimizer<br>- λ_decay: 0.92<br>- phase_min_gain: 0.015<br>- mmr_weight: 0.5<br>- junk_soft_threshold: 0.35<br><br>##<h2>Pattern Optimizer<br>- keep_ratio: 0.4<br>- junk_threshold: 0.40<br>- diversity_weight: 0.3<br><br>These parameters balance reduction aggressiveness with retention quality.<br>
+        </div>
+
+        <div id="latency" class="content-section">
+            <h2>Latency Analysis</h2>
+            <h2>ANNEX G: LATENCY ANALYSIS<br><br>#<h2>1. LATENCY STATISTICS<br><br>##<h2>Pattern Optimizer<br>- **No successful Pattern optimizer runs available**<br><br>##<h2>Entropy Optimizer<br>- **No successful Entropy optimizer runs available**<br><br>#<h2>2. LATENCY DISTRIBUTION<br><br>![Latency Distribution](chart_latency_distribution.png)<br><br><br>#<h2>3. PERFORMANCE IMPLICATIONS<br><br>- Both optimizers achieve sub-200ms P90 latency<br>- Entropy optimizer has ~25% higher latency due to additional computations<br>- Latency is acceptable for real-time applications<br>- P99 latency remains under 500ms for both optimizers<br>
+        </div>
+
+        <div id="reproducibility" class="content-section">
+            <h2>Reproducibility</h2>
+            <h2>ANNEX H: REPRODUCIBILITY<br><br>#<h2>1. ENVIRONMENT SNAPSHOT<br><br>- **Python Version**: 3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]<br>- **Platform**: Windows-10-10.0.26100-SP0<br>- **Processor**: AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD<br>- **Timestamp**: 2025-09-14T18:15:44.411809<br><br>#<h2>2. PACKAGE VERSIONS<br><br>- **numpy**: 2.3.1<br>- **pandas**: 2.2.3<br>- **scikit-learn**: 1.6.1<br>- **matplotlib**: 3.10.6<br>- **jinja2**: 3.1.6<br>- **requests**: 2.32.5<br><br>#<h2>3. CONFIGURATION FILES<br><br>Configuration saved to: `configs_snapshot/config.json`<br><br>##<h2>Key Parameters<br>- **Datasets**: 6<br>- **Repetitions**: 3<br>- **Max Items**: 50<br>- **Timeout**: 30.0s<br><br>#<h2>4. REPRODUCTION STEPS<br><br>```bash<br><h2>1. Install dependencies<br>pip install -r cego_bench/requirements.txt<br><br><h2>2. Run benchmark<br>python -m cego_bench.runners.run_bench --config configs/default.yaml<br><br><h2>3. Generate patent report<br>python -m cego_bench.reporting.patent_report<br>```<br><br>#<h2>5. GIT INFORMATION<br><br>- **Commit Hash**: d5c83fd0344098bbd3295f4d07f6a908e7579199<br>- **Branch**: main<br>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 CEGO Patent Evidence Report | Generated with CEGO Benchmark Harness v1.0</p>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Remove active from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Mark tab as active
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
+        

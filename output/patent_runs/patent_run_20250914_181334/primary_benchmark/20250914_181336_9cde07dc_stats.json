@@ -1,0 +1,19 @@
+{
+  "pattern": {
+    "total_runs": 150,
+    "successful_runs": 0,
+    "success_rate": 0.0,
+    "error_breakdown": {
+      "http_error": 150
+    }
+  },
+  "entropy": {
+    "total_runs": 150,
+    "successful_runs": 0,
+    "success_rate": 0.0,
+    "error_breakdown": {
+      "http_error": 147,
+      "timeout": 3
+    }
+  }
+}

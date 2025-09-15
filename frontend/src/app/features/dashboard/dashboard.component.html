@@ -3,9 +3,9 @@
   <mat-icon>analytics</mat-icon>
   <span style="margin-left: 8px;">CEGO Testing Dashboard</span>
   <span class="spacer"></span>
-  <mat-chip [color]="apiConnected ? 'accent' : 'warn'" selected>
-    <mat-icon>{{ apiConnected ? 'check_circle' : 'error' }}</mat-icon>
-    {{ apiConnected ? 'API Connected' : 'API Disconnected' }}
+  <mat-chip [color]="backendUp ? 'accent' : 'warn'" selected>
+    <mat-icon>{{ backendUp ? 'check_circle' : 'error' }}</mat-icon>
+    {{ backendUp ? 'API Connected' : 'API Disconnected' }}
   </mat-chip>
 </mat-toolbar>
 
@@ -24,8 +24,8 @@
         <h3>Predefined Scenarios</h3>
         <div class="scenario-chips">
           <mat-chip-listbox>
-            <mat-chip-option 
-              *ngFor="let scenario of scenarios" 
+            <mat-chip-option
+              *ngFor="let scenario of scenarios"
               [selected]="selectedScenario?.id === scenario.id"
               (selectionChange)="loadScenario(scenario)">
               {{scenario.name}}
@@ -46,7 +46,7 @@
       <!-- Context Input -->
       <mat-form-field class="full-width">
         <mat-label>Context Content (one chunk per line)</mat-label>
-        <textarea matInput [(ngModel)]="inputText" rows="8" 
+        <textarea matInput [(ngModel)]="inputText" rows="8"
                   placeholder="Paste your context chunks here, one per line"></textarea>
         <mat-icon matSuffix>description</mat-icon>
       </mat-form-field>
@@ -60,11 +60,11 @@
 
       <!-- Action Buttons -->
       <div class="action-buttons">
-        <button mat-raised-button color="primary" 
-                [disabled]="loading || !query || !inputText"
+        <button mat-raised-button color="primary"
+                [disabled]="!backendUp || loading || !query || !inputText"
                 (click)="runOptimization()">
           <mat-icon>play_arrow</mat-icon>
-          Run Optimization
+          {{ backendUp ? 'Run Optimization' : 'Backend Unavailable' }}
         </button>
         <button mat-button (click)="clearResults()" [disabled]="loading">
           <mat-icon>clear</mat-icon>
@@ -76,66 +76,58 @@
       <mat-progress-bar *ngIf="loading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
 
       <!-- Error Display -->
-      <mat-card *ngIf="error" class="error-card">
+      <mat-card *ngIf="errorMsg" class="error-card">
         <mat-card-content>
           <mat-icon color="warn">error</mat-icon>
-          <span>{{ error }}</span>
+          <span>{{ errorMsg }}</span>
         </mat-card-content>
       </mat-card>
     </mat-card-content>
   </mat-card>
 
   <!-- Results Section -->
-  <div class="results-section" *ngIf="quickWinsResult || entropyResult">
-    
-    <!-- Quick Wins Results -->
-    <mat-card class="result-card" *ngIf="quickWinsResult">
+  <div class="results-section" *ngIf="patternRecognitionResult || entropyResult">
+
+    <!-- Pattern Recognition Results -->
+    <mat-card class="result-card" *ngIf="patternRecognitionResult">
       <mat-card-header>
         <mat-card-title>
           <mat-icon>flash_on</mat-icon>
-          Quick Wins Optimization
+          Pattern Recognition Optimization
         </mat-card-title>
         <mat-card-subtitle>
-          Phase 1: Basic duplicate removal and similarity filtering
+          Phase 1: Advanced duplicate removal and similarity filtering
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <div class="metrics-grid">
+        <!-- Error Display for Pattern Recognition -->
+        <div *ngIf="hasPatternError" class="error-display">
+          <mat-icon color="warn">error</mat-icon>
+          <span>{{ patternErrorMsg }}</span>
+        </div>
+        <div class="metrics-grid" *ngIf="!hasPatternError">
           <div class="metric">
             <span class="metric-label">Token Reduction</span>
-            <span class="metric-value primary">{{ getReductionPercentage(quickWinsResult).toFixed(1) }}%</span>
+            <span class="metric-value primary">{{ patternPct }}%</span>
           </div>
           <div class="metric">
             <span class="metric-label">Processing Time</span>
-            <span class="metric-value">{{ getProcessingTime(quickWinsResult).toFixed(1) }}ms</span>
+            <span class="metric-value">{{ (patternRecognitionResult?.processing_time_ms || 0) | number:'1.0-1' }}ms</span>
           </div>
-          <div class="metric">
-            <span class="metric-label">Original Tokens</span>
-            <span class="metric-value">{{ getOriginalTokens(quickWinsResult) }}</span>
-          </div>
-          <div class="metric">
-            <span class="metric-label">Final Tokens</span>
-            <span class="metric-value">{{ getFinalTokens(quickWinsResult) }}</span>
-          </div>
-        </div>
-        
-        <div class="cost-savings">
-          <mat-icon>savings</mat-icon>
-          <span>Estimated Cost Savings: ${{ calculateCostSavings(getReductionPercentage(quickWinsResult), getOriginalTokens(quickWinsResult)).toFixed(4) }}</span>
         </div>
 
         <!-- Optimized Content Preview -->
-        <mat-card class="content-preview">
+        <mat-card class="content-preview" *ngIf="!hasPatternError">
           <mat-card-header>
-            <mat-card-title>Optimized Content ({{ quickWinsResult.optimized_context?.length || 0 }} chunks)</mat-card-title>
+            <mat-card-title>Optimized Content ({{ patternChunks.length }} chunks)</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <div class="chunk-list">
-              <div *ngFor="let chunk of quickWinsResult.optimized_context?.slice(0, 3)" class="chunk-item">
+              <div *ngFor="let chunk of patternChunks.slice(0, 3); trackBy: trackByIndex" class="chunk-item">
                 {{ chunk.length > 100 ? chunk.substring(0, 100) + '...' : chunk }}
               </div>
-              <div *ngIf="(quickWinsResult.optimized_context?.length || 0) > 3" class="more-chunks">
-                ... and {{ (quickWinsResult.optimized_context?.length || 0) - 3 }} more chunks
+              <div *ngIf="patternChunks.length > 3" class="more-chunks">
+                ... and {{ patternChunks.length - 3 }} more chunks
               </div>
             </div>
           </mat-card-content>
@@ -155,32 +147,37 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <div class="metrics-grid">
+        <!-- Error Display for Entropy -->
+        <div *ngIf="hasEntropyError" class="error-display">
+          <mat-icon color="warn">error</mat-icon>
+          <span>{{ entropyErrorMsg }}</span>
+        </div>
+        <div class="metrics-grid" *ngIf="!hasEntropyError">
           <div class="metric">
             <span class="metric-label">Token Reduction</span>
-            <span class="metric-value accent">{{ getReductionPercentage(entropyResult).toFixed(1) }}%</span>
+            <span class="metric-value accent">{{ entropyPct }}%</span>
           </div>
           <div class="metric">
             <span class="metric-label">Processing Time</span>
-            <span class="metric-value">{{ getProcessingTime(entropyResult).toFixed(1) }}ms</span>
+            <span class="metric-value">{{ (entropyResult?.processing_time_ms || 0) | number:'1.0-1' }}ms</span>
           </div>
           <div class="metric">
             <span class="metric-label">Confidence Score</span>
-            <span class="metric-value">{{ (entropyResult.confidence_score || 0).toFixed(1) }}%</span>
+            <span class="metric-value">{{ (entropyConfidence * 100) | number:'1.0-1' }}%</span>
           </div>
           <div class="metric">
             <span class="metric-label">Method Used</span>
-            <span class="metric-value">{{ entropyResult.method_used || 'Entropy' }}</span>
+            <span class="metric-value">{{ entropyResult?.method_used || 'Entropy' }}</span>
           </div>
         </div>
 
-        <div class="cost-savings">
+        <div class="cost-savings" *ngIf="!hasEntropyError">
           <mat-icon>savings</mat-icon>
-          <span>Estimated Cost Savings: ${{ calculateCostSavings(getReductionPercentage(entropyResult), getOriginalTokens(entropyResult)).toFixed(4) }}</span>
+          <span>Estimated Cost Savings: ${{ calculateCostSavings(entropyPct, entropyResult?.original_count || 0).toFixed(4) }}</span>
         </div>
 
         <!-- Entropy Analysis -->
-        <mat-card class="entropy-analysis" *ngIf="entropyResult.entropy_analysis">
+        <mat-card class="entropy-analysis" *ngIf="entropyResult?.entropy_analysis && !hasEntropyError">
           <mat-card-header>
             <mat-card-title>Entropy Analysis</mat-card-title>
           </mat-card-header>
@@ -188,30 +185,35 @@
             <div class="entropy-metrics">
               <div class="entropy-item">
                 <span>Total Entropy:</span>
-                <span>{{ entropyResult.entropy_analysis.total_entropy?.toFixed(2) || 'N/A' }}</span>
+                <span>{{ entropyResult?.entropy_analysis?.total_entropy?.toFixed(2) || 'N/A' }}</span>
               </div>
-              <div *ngFor="let entropy of Object.entries(entropyResult.entropy_analysis.dimension_entropies || {})" class="entropy-item">
+              <div *ngFor="let entropy of entropyDimensionEntries" class="entropy-item">
                 <span>{{ entropy[0] }}:</span>
-                <span>{{ entropy[1].toFixed(2) }}</span>
+                <span>{{ entropy[1] | number:'1.2-2' }}</span>
               </div>
             </div>
           </mat-card-content>
         </mat-card>
 
         <!-- Optimized Content Preview -->
-        <mat-card class="content-preview">
+        <mat-card class="content-preview" *ngIf="!hasEntropyError">
           <mat-card-header>
-            <mat-card-title>Optimized Content ({{ entropyResult.optimized_context?.length || 0 }} chunks)</mat-card-title>
+            <mat-card-title>Optimized Content ({{ entropyChunks.length }} chunks)</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <div class="chunk-list">
-              <div *ngFor="let chunk of entropyResult.optimized_context?.slice(0, 3)" class="chunk-item">
-                {{ chunk.length > 100 ? chunk.substring(0, 100) + '...' : chunk }}
+            <ng-container *ngIf="entropyChunks.length; else noEntropyChunks">
+              <div class="chunk-list">
+                <div *ngFor="let chunk of entropyChunks.slice(0, 3); trackBy: trackByIndex" class="chunk-item">
+                  {{ chunk.length > 100 ? chunk.substring(0, 100) + '...' : chunk }}
+                </div>
+                <div *ngIf="entropyChunks.length > 3" class="more-chunks">
+                  ... and {{ entropyChunks.length - 3 }} more chunks
+                </div>
               </div>
-              <div *ngIf="(entropyResult.optimized_context?.length || 0) > 3" class="more-chunks">
-                ... and {{ (entropyResult.optimized_context?.length || 0) - 3 }} more chunks
-              </div>
-            </div>
+            </ng-container>
+            <ng-template #noEntropyChunks>
+              <div class="muted">No optimized chunks.</div>
+            </ng-template>
           </mat-card-content>
         </mat-card>
       </mat-card-content>
@@ -225,14 +227,14 @@
           Algorithm Comparison
         </mat-card-title>
         <mat-card-subtitle>
-          Performance comparison between Quick Wins and Entropy optimization
+          Performance comparison between Pattern Recognition and Entropy optimization
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="comparison-metrics">
           <div class="comparison-item">
             <span class="comparison-label">Improvement:</span>
-            <span class="comparison-value" [class.positive]="comparisonResult.improvement > 0" 
+            <span class="comparison-value" [class.positive]="comparisonResult.improvement > 0"
                   [class.negative]="comparisonResult.improvement < 0">
               {{ comparisonResult.improvement > 0 ? '+' : '' }}{{ comparisonResult.improvement.toFixed(2) }}%
             </span>
@@ -245,7 +247,7 @@
               ⚖️ Both algorithms achieved the same level of optimization.
             </span>
             <span *ngIf="comparisonResult.improvement < 0">
-              ⚡ Quick Wins performed better by {{ abs(comparisonResult.improvement).toFixed(1) }}% in this case.
+              ⚡ Pattern Recognition performed better by {{ abs(comparisonResult.improvement).toFixed(1) }}% in this case.
             </span>
           </div>
         </div>

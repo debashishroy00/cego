@@ -1,0 +1,31 @@
+{
+  "run_id": "patent_20250914_183320",
+  "generated": "2025-09-14T18:33:28.126458",
+  "deliverables": {
+    "patent_pack": "output\\patent_runs\\patent_run_20250914_183320\\patent_pack",
+    "exemplars": "output\\patent_runs\\patent_run_20250914_183320\\exemplars",
+    "configs_snapshot": "output\\patent_runs\\patent_run_20250914_183320\\configs_snapshot",
+    "ablations": "output\\patent_runs\\patent_run_20250914_183320\\ablations",
+    "raw_results": "{'results': WindowsPath('output/patent_runs/patent_run_20250914_183320/primary_benchmark/20250914_183326_aad6dd60_results.jsonl'), 'summary': WindowsPath('output/patent_runs/patent_run_20250914_183320/primary_benchmark/20250914_183326_aad6dd60_summary.csv'), 'calibration': WindowsPath('output/patent_runs/patent_run_20250914_183320/primary_benchmark/20250914_183326_aad6dd60_calibration.csv'), 'domains': WindowsPath('output/patent_runs/patent_run_20250914_183320/primary_benchmark/20250914_183326_aad6dd60_by_domain.json'), 'stats': WindowsPath('output/patent_runs/patent_run_20250914_183320/primary_benchmark/20250914_183326_aad6dd60_stats.json'), 'tweaks': WindowsPath('output/patent_runs/patent_run_20250914_183320/primary_benchmark/20250914_183326_aad6dd60_suggested_tweaks.yaml'), 'html_report': WindowsPath('output/patent_runs/patent_run_20250914_183320/primary_benchmark/20250914_183326_aad6dd60_report.html')}"
+  },
+  "files": {
+    "AnnexA": "output\\patent_runs\\patent_run_20250914_183320\\patent_pack\\patent_pack\\AnnexA_Executive_Summary.md",
+    "AnnexB": "output\\patent_runs\\patent_run_20250914_183320\\patent_pack\\patent_pack\\AnnexB_Methodology.md",
+    "AnnexC": "output\\patent_runs\\patent_run_20250914_183320\\patent_pack\\patent_pack\\AnnexC_Aggregates.md",
+    "AnnexD": "output\\patent_runs\\patent_run_20250914_183320\\patent_pack\\patent_pack\\AnnexD_Exemplars.md",
+    "AnnexE": "output\\patent_runs\\patent_run_20250914_183320\\patent_pack\\patent_pack\\AnnexE_Calibration.md",
+    "AnnexF": "output\\patent_runs\\patent_run_20250914_183320\\patent_pack\\patent_pack\\AnnexF_Ablations.md",
+    "AnnexG": "output\\patent_runs\\patent_run_20250914_183320\\patent_pack\\patent_pack\\AnnexG_Latency.md",
+    "AnnexH": "output\\patent_runs\\patent_run_20250914_183320\\patent_pack\\patent_pack\\AnnexH_Reproducibility.md",
+    "Full_Report": "output\\patent_runs\\patent_run_20250914_183320\\patent_pack\\patent_pack\\Full_Report.html",
+    "exemplars_dir": "output\\patent_runs\\patent_run_20250914_183320\\exemplars",
+    "configs_snapshot": "output\\patent_runs\\patent_run_20250914_183320\\configs_snapshot",
+    "ablations_dir": "output\\patent_runs\\patent_run_20250914_183320\\ablations"
+  },
+  "statistics": {
+    "total_tests": 300,
+    "successful_tests": 300,
+    "domains_tested": 5,
+    "exemplars_generated": 0
+  }
+}

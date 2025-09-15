@@ -1,0 +1,64 @@
+# CEGO Benchmark Stress Test Configuration
+# Designed for comprehensive testing with higher loads and edge cases
+
+# Optimization endpoint URLs
+endpoints:
+  pattern: "http://127.0.0.1:8003/optimize/pattern"
+  entropy: "http://127.0.0.1:8003/optimize/entropy"
+
+# Aggressive request settings for stress testing
+timeout: 60.0  # Longer timeout for stress conditions
+max_retries: 5  # More retries for robustness testing
+retry_delay: 2.0  # Longer delay between retries
+
+# Full dataset coverage including edge cases
+datasets:
+  - "cego_bench/datasets/insurance.jsonl"
+  - "cego_bench/datasets/sdlc.jsonl"
+  - "cego_bench/datasets/mixed.jsonl"
+  - "cego_bench/datasets/noisy.jsonl"
+  - "cego_bench/datasets/dupes.jsonl"
+  - "cego_bench/datasets/format.jsonl"
+
+# Scoring configuration without embeddings (TF-IDF fallback test)
+scoring:
+  method_order: ["tfidf", "rouge"]  # Skip embeddings for performance
+  embed_model: "all-MiniLM-L6-v2"  # Not used in this config
+
+# Stress test parameters
+runs:
+  repeat: 5  # More repetitions for statistical significance
+  max_items: 100  # Allow larger test cases
+
+# Comprehensive reporting
+reporting:
+  save_html: true
+  save_artifacts: true
+  save_csv: true
+  detailed_logging: true
+
+# Relaxed acceptance gates for stress testing
+acceptance_gates:
+  entropy:
+    min_reduction_median: 55.0  # Slightly lower for stress conditions
+    min_retention_mean: 0.90    # Relaxed for large datasets
+    max_junk_kept_rate: 0.12    # Slightly higher tolerance
+  pattern:
+    min_reduction_median: 18.0  # Slightly lower for stress conditions
+    min_retention_mean: 0.88    # Relaxed for large datasets
+    max_junk_kept_rate: 0.18    # Higher tolerance
+  general:
+    min_intent_preservation: 0.92  # Relaxed for complex scenarios
+    max_latency_ratio: 1.5         # Higher tolerance for performance
+
+# Stress test specific settings
+stress_test:
+  large_input_threshold: 40  # Items count for large input classification
+  high_junk_ratio_threshold: 0.6  # Junk ratio for high-noise classification
+  concurrent_requests: false  # Sequential for stability
+
+# Output configuration
+output:
+  base_dir: "output/stress_runs"
+  include_timestamp: true
+  compress_results: true

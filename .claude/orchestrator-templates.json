@@ -1,0 +1,108 @@
+{
+  "templates": {
+    "python_ml": {
+      "language": "python",
+      "tools": {
+        "lint": "ruff check .",
+        "format": "ruff format .",
+        "test": "pytest --cov=src tests/",
+        "security": "bandit -r src/ && safety check",
+        "typecheck": "mypy src/"
+      },
+      "metrics": {
+        "performance": {
+          "training_time": {"target": -10, "cap": 20, "unit": "%"},
+          "inference_latency": {"target": -5, "cap": 15, "unit": "%"},
+          "memory_usage": {"target": 0, "cap": 20, "unit": "%"}
+        },
+        "custom": {
+          "model_accuracy": {"target": 0.85, "absolute": true, "unit": "score"},
+          "f1_score": {"target": 0.80, "absolute": true, "unit": "score"}
+        }
+      }
+    },
+    "typescript_api": {
+      "language": "typescript",
+      "tools": {
+        "lint": "eslint . --max-warnings 0",
+        "format": "prettier --write .",
+        "test": "vitest --run --coverage",
+        "security": "semgrep --config auto && npm audit",
+        "typecheck": "tsc --noEmit",
+        "build": "npm run build"
+      },
+      "metrics": {
+        "performance": {
+          "response_time": {"target": -5, "cap": 10, "unit": "%"},
+          "throughput": {"target": 5, "cap": -10, "unit": "%"},
+          "memory_usage": {"target": 0, "cap": 15, "unit": "%"}
+        },
+        "custom": {
+          "bundle_size": {"target": 0, "cap": 5, "unit": "%"}
+        }
+      }
+    },
+    "react_frontend": {
+      "language": "typescript",
+      "framework": "react",
+      "tools": {
+        "lint": "eslint . --max-warnings 0",
+        "format": "prettier --write .",
+        "test": "vitest --run --coverage",
+        "security": "npm audit && eslint . --config security",
+        "typecheck": "tsc --noEmit",
+        "build": "npm run build"
+      },
+      "metrics": {
+        "performance": {
+          "bundle_size": {"target": 0, "cap": 5, "unit": "%"},
+          "render_time": {"target": -5, "cap": 10, "unit": "%"},
+          "lighthouse_performance": {"target": 90, "absolute": true, "unit": "score"}
+        },
+        "custom": {
+          "accessibility_score": {"target": 95, "absolute": true, "unit": "score"}
+        }
+      }
+    },
+    "go_microservice": {
+      "language": "go",
+      "tools": {
+        "lint": "golangci-lint run",
+        "format": "gofmt -w . && goimports -w .",
+        "test": "go test -v -race -cover ./...",
+        "security": "gosec ./...",
+        "build": "go build -o bin/ ./..."
+      },
+      "metrics": {
+        "performance": {
+          "response_time": {"target": -5, "cap": 10, "unit": "%"},
+          "memory_usage": {"target": 0, "cap": 15, "unit": "%"},
+          "binary_size": {"target": 0, "cap": 10, "unit": "%"}
+        },
+        "custom": {
+          "goroutine_leaks": {"target": 0, "absolute": true, "unit": "count"}
+        }
+      }
+    }
+  },
+  "standards": {
+    "universal": {
+      "max_function_lines": 30,
+      "test_coverage": 80,
+      "security_level": "no-high"
+    },
+    "python": {
+      "max_function_lines": 25,
+      "docstring_required": true,
+      "type_hints_required": true
+    },
+    "typescript": {
+      "strict_mode": true,
+      "no_any": true
+    },
+    "go": {
+      "max_function_lines": 35,
+      "error_handling_required": true
+    }
+  }
+}

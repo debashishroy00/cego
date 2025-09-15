@@ -1,0 +1,54 @@
+{
+  "endpoints": {
+    "pattern": "http://127.0.0.1:8003/optimize",
+    "entropy": "http://127.0.0.1:8003/optimize/entropy"
+  },
+  "timeout": 30.0,
+  "max_retries": 3,
+  "retry_delay": 1.0,
+  "datasets": [
+    "cego_bench/datasets/insurance.jsonl",
+    "cego_bench/datasets/sdlc.jsonl",
+    "cego_bench/datasets/mixed.jsonl",
+    "cego_bench/datasets/noisy.jsonl",
+    "cego_bench/datasets/dupes.jsonl",
+    "cego_bench/datasets/format.jsonl"
+  ],
+  "scoring": {
+    "method_order": [
+      "embed",
+      "tfidf",
+      "rouge"
+    ],
+    "embed_model": "all-MiniLM-L6-v2"
+  },
+  "runs": {
+    "repeat": 3,
+    "max_items": 50
+  },
+  "reporting": {
+    "save_html": true,
+    "save_artifacts": true,
+    "save_csv": true
+  },
+  "acceptance_gates": {
+    "entropy": {
+      "min_reduction_median": 60.0,
+      "min_retention_mean": 0.92,
+      "max_junk_kept_rate": 0.1
+    },
+    "pattern": {
+      "min_reduction_median": 20.0,
+      "min_retention_mean": 0.9,
+      "max_junk_kept_rate": 0.15
+    },
+    "general": {
+      "min_intent_preservation": 0.95,
+      "max_latency_ratio": 1.25
+    }
+  },
+  "output": {
+    "base_dir": "output\\patent_runs\\patent_run_20250914_183320",
+    "include_timestamp": false
+  }
+}

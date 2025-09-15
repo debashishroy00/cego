@@ -74,25 +74,10 @@ class EntropyAPI:
                 max_tokens=max_tokens
             )
             
-            # Convert to API response format
-            return {
-                "optimized_context": result.optimized_context,
-                "original_count": result.original_count,
-                "optimized_count": result.optimized_count,
-                "token_reduction_percentage": result.token_reduction_percentage,
-                "processing_time_ms": result.processing_time_ms,
-                "method_used": result.method_used,
-                "entropy_analysis": result.entropy_analysis,
-                "confidence_score": result.confidence_score,
-                "phase_transitions": result.phase_transitions,
-                "stats": {
-                    "algorithm": "entropy_optimization",
-                    "version": self.version,
-                    "entropy_dimensions": list(result.entropy_analysis.get("dimension_entropies", {}).keys()),
-                    "total_entropy": result.entropy_analysis.get("total_entropy", 0.0),
-                    "optimization_confidence": result.confidence_score
-                }
-            }
+            # Return the result directly - entropy optimizer already returns the correct format
+            result["original_count"] = len(context_pool)
+            result["optimized_count"] = len(result["optimized_context"])
+            return result
             
         except Exception as e:
             logger.error(f"Entropy optimization failed: {e}")

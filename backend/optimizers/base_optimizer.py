@@ -106,10 +106,15 @@ class BaseOptimizer(ABC):
             final_pieces = len(optimized_context)
             final_tokens = sum(self.estimate_tokens(text) for text in optimized_context)
             processing_time = (time.time() - start_time) * 1000  # Convert to ms
-            
-            # 6. Track metrics and return results
+
+            # 6. Calculate semantic retention
+            from ..utils.relevance import semantic_retention
+            retention = semantic_retention(context_pool, optimized_context)
+
+            # 7. Track metrics and return results
             return {
                 'optimized_context': optimized_context,
+                'semantic_retention': retention,
                 'stats': {
                     'original': {
                         'pieces': original_pieces,

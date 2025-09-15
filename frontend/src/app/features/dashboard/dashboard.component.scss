@@ -76,13 +76,26 @@
   background-color: #ffebee;
   border-left: 4px solid #f44336;
   margin-bottom: 16px;
-  
+
   .mat-card-content {
     display: flex;
     align-items: center;
     gap: 8px;
     color: #d32f2f;
   }
+}
+
+.error-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+  border-radius: 4px;
+  color: #d32f2f;
+  font-weight: 500;
 }
 
 .results-section {

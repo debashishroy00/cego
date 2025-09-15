@@ -1,0 +1,93 @@
+{
+  "insurance": {
+    "pattern": {
+      "total_runs": 30,
+      "successful_runs": 0,
+      "success_rate": 0.0,
+      "error_breakdown": {
+        "http_error": 30
+      }
+    },
+    "entropy": {
+      "total_runs": 30,
+      "successful_runs": 0,
+      "success_rate": 0.0,
+      "error_breakdown": {
+        "http_error": 30
+      }
+    }
+  },
+  "sdlc": {
+    "pattern": {
+      "total_runs": 30,
+      "successful_runs": 0,
+      "success_rate": 0.0,
+      "error_breakdown": {
+        "http_error": 30
+      }
+    },
+    "entropy": {
+      "total_runs": 30,
+      "successful_runs": 0,
+      "success_rate": 0.0,
+      "error_breakdown": {
+        "http_error": 30
+      }
+    }
+  },
+  "mixed": {
+    "pattern": {
+      "total_runs": 30,
+      "successful_runs": 0,
+      "success_rate": 0.0,
+      "error_breakdown": {
+        "http_error": 30
+      }
+    },
+    "entropy": {
+      "total_runs": 30,
+      "successful_runs": 0,
+      "success_rate": 0.0,
+      "error_breakdown": {
+        "http_error": 30
+      }
+    }
+  },
+  "dupes": {
+    "pattern": {
+      "total_runs": 30,
+      "successful_runs": 0,
+      "success_rate": 0.0,
+      "error_breakdown": {
+        "http_error": 30
+      }
+    },
+    "entropy": {
+      "total_runs": 30,
+      "successful_runs": 0,
+      "success_rate": 0.0,
+      "error_breakdown": {
+        "http_error": 30
+      }
+    }
+  },
+  "format": {
+    "pattern": {
+      "total_runs": 30,
+      "successful_runs": 0,
+      "success_rate": 0.0,
+      "error_breakdown": {
+        "http_error": 30
+      }
+    },
+    "entropy": {
+      "total_runs": 30,
+      "successful_runs": 0,
+      "success_rate": 0.0,
+      "error_breakdown": {
+        "http_error": 27,
+        "timeout": 3
+      }
+    }
+  }
+}

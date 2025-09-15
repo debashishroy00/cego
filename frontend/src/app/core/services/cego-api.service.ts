@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { OptimizationRequest, OptimizationResult, HealthResponse } from '../models/optimization.model';
+import { catchError } from 'rxjs/operators';
+import { EntropyOptimizationResponse, OptimizationResult, HealthResponse, OptimizeRequest } from '../models/optimization.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CegoApiService {
-  private apiUrl = 'http://localhost:8001';
+  private apiUrl = 'http://localhost:8003';
 
   constructor(private http: HttpClient) {}
 
@@ -17,39 +17,31 @@ export class CegoApiService {
       .pipe(catchError(this.handleError));
   }
 
-  optimizeQuickWins(request: OptimizationRequest): Observable<OptimizationResult> {
+  optimizePatternRecognition(request: OptimizeRequest): Observable<OptimizationResult> {
     const payload = {
       query: request.query,
-      context_pool: request.contextPool,
-      max_tokens: request.maxTokens
+      context_pool: request.context_pool,
+      max_tokens: request.max_tokens
     };
 
     return this.http.post<OptimizationResult>(`${this.apiUrl}/optimize`, payload)
       .pipe(catchError(this.handleError));
   }
 
-  optimizeEntropy(request: OptimizationRequest): Observable<OptimizationResult> {
+  optimizeEntropy(request: OptimizeRequest): Observable<EntropyOptimizationResponse> {
     const payload = {
       query: request.query,
-      context_pool: request.contextPool,
-      max_tokens: request.maxTokens
+      context_pool: request.context_pool,
+      max_tokens: request.max_tokens
     };
 
-    return this.http.post<OptimizationResult>(`${this.apiUrl}/optimize/entropy`, payload)
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === 503) {
-            // Service unavailable - entropy features not available
-            return throwError(() => new Error('Entropy optimization not available: ' + error.error?.detail || 'Service unavailable'));
-          }
-          return this.handleError(error);
-        })
-      );
+    return this.http.post<EntropyOptimizationResponse>(`${this.apiUrl}/optimize/entropy`, payload)
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = `Error: ${error.error.message}`;
@@ -63,7 +55,7 @@ export class CegoApiService {
         errorMessage = `Error ${error.status}: ${error.message}`;
       }
     }
-    
+
     console.error('CEGO API Error:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }

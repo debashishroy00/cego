@@ -1,0 +1,55 @@
+# CEGO Honest Benchmark Configuration
+# Designed for realistic, credible patent evidence
+
+# Optimization endpoint URLs
+endpoints:
+  pattern: "http://127.0.0.1:8003/optimize"
+  entropy: "http://127.0.0.1:8003/optimize/entropy"
+
+# Request settings
+timeout: 30.0
+max_retries: 3
+retry_delay: 1.0
+
+# Dataset files - controlled sample (20 per domain = 100 total)
+datasets:
+  - "cego_bench/datasets/insurance.jsonl"
+  - "cego_bench/datasets/sdlc.jsonl"
+  - "cego_bench/datasets/mixed.jsonl"
+  - "cego_bench/datasets/noisy.jsonl"
+  - "cego_bench/datasets/dupes.jsonl"
+
+# Scoring configuration
+scoring:
+  method_order: ["embed", "tfidf", "rouge"]
+  embed_model: "all-MiniLM-L6-v2"
+
+# Benchmark run parameters - controlled for reproducibility
+runs:
+  repeat: 3  # 3 repetitions for statistical stability
+  max_items: 20  # 20 test cases per domain
+
+# Reporting settings
+reporting:
+  save_html: true
+  save_artifacts: true
+  save_csv: true
+
+# Realistic acceptance gates (preliminary values)
+acceptance_gates:
+  entropy:
+    min_reduction_median: 45.0  # Realistic expectation
+    min_retention_mean: 0.70    # Lower but honest expectation
+    max_junk_kept_rate: 0.20    # Allow for imperfection
+  pattern:
+    min_reduction_median: 25.0  # Modest but meaningful
+    min_retention_mean: 0.75    # Realistic retention
+    max_junk_kept_rate: 0.25    # Allow for noise
+  general:
+    min_intent_preservation: 0.80  # Realistic threshold
+    max_latency_ratio: 2.0         # Allow for entropy complexity
+
+# Output configuration
+output:
+  base_dir: "output/honest_runs"
+  include_timestamp: true

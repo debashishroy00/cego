@@ -214,15 +214,19 @@ class ShannonEntropyCalculator:
     def _select_optimal_method(self, skewness: float) -> str:
         """
         Select optimal entropy calculation method based on distribution skewness.
-        
+
         Args:
             skewness: Skewness of the probability distribution
-            
+
         Returns:
             Method name: 'shannon', 'cross_entropy', or 'kl_divergence'
         """
+        # Handle NaN skewness (uniform distributions)
+        if np.isnan(skewness) or np.isinf(skewness):
+            return 'shannon'
+
         abs_skewness = abs(skewness)
-        
+
         if abs_skewness < self.method_thresholds['low_skew']:
             return 'shannon'
         elif abs_skewness < self.method_thresholds['medium_skew']:

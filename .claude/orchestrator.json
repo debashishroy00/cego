@@ -1,0 +1,52 @@
+{
+  "project_name": "CEGO",
+  "language": "python",
+  "frontend": "angular",
+  "
+": {
+    "max_function_lines": 30,
+    "test_coverage": 80,
+    "security_level": "no-high",
+    "docstring_required": true
+  },
+  "tools": {
+    "backend": {
+      "lint": "ruff check backend/",
+      "format": "ruff format backend/",
+      "test": "PYTHONPATH=. python -m pytest tests/ -v --cov=backend",
+      "security": "bandit -r backend/ -f json",
+      "typecheck": "mypy backend/"
+    },
+    "frontend": {
+      "lint": "cd frontend && npm run lint",
+      "test": "cd frontend && npm test",
+      "build": "cd frontend && npm run build",
+      "security": "cd frontend && npm audit"
+    }
+  },
+  "metrics": {
+    "performance": {
+      "api_latency": {"target": -5, "cap": 10, "unit": "%"},
+      "memory_usage": {"target": 0, "cap": 15, "unit": "%"},
+      "optimization_convergence": {"target": -10, "cap": 5, "unit": "%"}
+    },
+    "quality": {
+      "test_coverage": {"target": 80, "absolute": true, "unit": "%"},
+      "cyclomatic_complexity": {"target": 10, "absolute": true, "unit": "max"}
+    },
+    "custom": {
+      "optimization_ratio": {"target": 1.2, "absolute": true, "unit": "factor"},
+      "pattern_recognition_accuracy": {"target": 0.85, "absolute": true, "unit": "score"},
+      "entropy_reduction": {"target": 0.15, "absolute": true, "unit": "factor"}
+    }
+  },
+  "gates": {
+    "build": "All code compiles without errors",
+    "test": "All tests pass, coverage >= 80%",
+    "review": "Code follows standards, functions <= 30 lines",
+    "security": "No high severity issues, no hardcoded secrets",
+    "performance": "Metrics within acceptable bounds"
+  },
+  "benchmark_command": "PYTHONPATH=. python benchmark/run_benchmarks.py",
+  "benchmark_output": "ci/BENCH_SUMMARY.txt"
+}

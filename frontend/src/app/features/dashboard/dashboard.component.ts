@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -11,10 +11,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-import { Subject, takeUntil, forkJoin } from 'rxjs';
+import { Subject, takeUntil, of, forkJoin } from 'rxjs';
+import { catchError, timeout, finalize } from 'rxjs/operators';
 import { CegoApiService } from '../../core/services/cego-api.service';
 import { ScenarioManagerService } from '../../core/services/scenario-manager.service';
-import { OptimizationRequest, OptimizationResult, TestScenario, ComparisonResult } from '../../core/models/optimization.model';
+import { EntropyOptimizationResponse, OptimizationResult, TestScenario, ComparisonResult, OptimizeRequest } from '../../core/models/optimization.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,7 +35,8 @@ import { OptimizationRequest, OptimizationResult, TestScenario, ComparisonResult
     MatDividerModule
   ],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -45,19 +47,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   maxTokens = 2000;
 
   // Results
-  quickWinsResult: OptimizationResult | null = null;
-  entropyResult: OptimizationResult | null = null;
-  comparisonResult: ComparisonResult | null = null;
-  
+  patternRecognitionResult?: OptimizationResult;
+  entropyResult?: EntropyOptimizationResponse;
+  comparisonResult?: ComparisonResult;
+
   // UI state
   loading = false;
-  error: string | null = null;
-  apiConnected = false;
+  errorMsg = '';
+  backendUp = false;
 
   // Scenarios
   scenarios: TestScenario[] = [];
-  selectedScenario: TestScenario | null = null;
-
+  selectedScenario?: TestScenario;
 
   constructor(
     private cegoApi: CegoApiService,
@@ -66,8 +67,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.scenarios = this.scenarioManager.getScenarios();
-    this.checkApiConnection();
-    
+    this.checkBackendHealth();
+
     // Subscribe to scenario selection
     this.scenarioManager.selectedScenario$
       .pipe(takeUntil(this.destroy$))
@@ -83,130 +84,174 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  checkApiConnection(): void {
+  private checkBackendHealth(): void {
     this.cegoApi.checkHealth()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (health) => {
-          // Consider API connected if we get any response (even if status is unhealthy)
-          // The optimization endpoints may still work fine
-          this.apiConnected = true;
-          console.log('API health check response:', health);
-        },
-        error: (error) => {
-          this.apiConnected = false;
-          console.warn('API connection check failed:', error);
-        }
+      .pipe(
+        timeout(3000),
+        catchError(() => of(null)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(response => {
+        this.backendUp = !!response;
       });
   }
 
   loadScenario(scenario: TestScenario): void {
     this.selectedScenario = scenario;
     this.query = scenario.query;
-    this.inputText = scenario.chunks.join('\n');
+    this.inputText = scenario.chunks.join('\\n');
     this.clearResults();
   }
 
   clearResults(): void {
-    this.quickWinsResult = null;
-    this.entropyResult = null;
-    this.comparisonResult = null;
-    this.error = null;
+    this.patternRecognitionResult = undefined;
+    this.entropyResult = undefined;
+    this.comparisonResult = undefined;
+    this.errorMsg = '';
+  }
+
+  private buildRequest(): OptimizeRequest {
+    const contextPool = (this.inputText || '')
+      .split(/\\r?\\n/)
+      .map(s => s.trim())
+      .filter(Boolean); // one chunk per line
+
+    return {
+      query: this.query?.trim() || '',
+      context_pool: contextPool,
+      max_tokens: this.maxTokens || null
+    };
   }
 
   runOptimization(): void {
-    if (!this.query || !this.inputText) {
-      this.error = 'Please enter both query and context content';
-      return;
-    }
-
     this.loading = true;
-    this.error = null;
+    this.errorMsg = '';
     this.clearResults();
 
-    const chunks = this.inputText.split('\n').filter(line => line.trim());
-    const request: OptimizationRequest = {
-      query: this.query,
-      contextPool: chunks,
-      maxTokens: this.maxTokens,
-      algorithm: 'both'
+    // Build request: split textarea into array of lines
+    const contextPool = (this.inputText || '')
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean);
+
+    const req = {
+      query: this.query?.trim() || '',
+      context_pool: contextPool,
+      max_tokens: this.maxTokens ?? null,
     };
 
-    // Start with Quick Wins optimization (always available)
-    this.runQuickWinsOptimization(request);
-  }
+    const pattern$ = this.cegoApi.optimizePatternRecognition(req).pipe(
+      timeout(15000),
+      catchError(err => {
+        console.warn('Pattern Recognition failed:', err);
+        return of(null);
+      })
+    );
 
-  private runQuickWinsOptimization(request: OptimizationRequest): void {
-    this.cegoApi.optimizeQuickWins(request)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (result) => {
-          this.quickWinsResult = result;
-          // Now try entropy optimization
-          this.runEntropyOptimization(request);
-        },
-        error: (error) => {
-          this.error = `Quick Wins optimization failed: ${error.message}`;
+    const entropy$ = this.cegoApi.optimizeEntropy(req).pipe(
+      timeout(15000),
+      catchError(err => {
+        console.warn('Entropy optimization failed:', err);
+        return of(null);
+      })
+    );
+
+    // Run both, but don't let one block the other
+    forkJoin({ pattern: pattern$, entropy: entropy$ })
+      .pipe(
+        finalize(() => {
           this.loading = false;
+          // Create comparison if we have at least one result
+          if (this.patternRecognitionResult || this.entropyResult) {
+            this.createComparisonResult();
+          } else if (!this.patternRecognitionResult && !this.entropyResult) {
+            this.errorMsg = 'Both optimizers failed or timed out. Please check the backend logs.';
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(({ pattern, entropy }) => {
+        if (pattern) {
+          this.patternRecognitionResult = pattern;
+        }
+        if (entropy) {
+          this.entropyResult = entropy;
         }
       });
   }
-
-  private runEntropyOptimization(request: OptimizationRequest): void {
-    this.cegoApi.optimizeEntropy(request)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (result) => {
-          this.entropyResult = result;
-          this.createComparisonResult();
-          this.loading = false;
-        },
-        error: (error) => {
-          console.warn('Entropy optimization failed:', error.message);
-          // Still show Quick Wins results even if entropy fails
-          this.createComparisonResult();
-          this.loading = false;
-        }
-      });
-  }
-
 
   private createComparisonResult(): void {
-    if (!this.quickWinsResult && !this.entropyResult) return;
+    if (!this.patternRecognitionResult && !this.entropyResult) return;
 
-    const quickWinsReduction = this.quickWinsResult?.stats?.reduction?.token_reduction_pct || 0;
-    const entropyReduction = this.entropyResult?.token_reduction_percentage || 
-                           this.entropyResult?.stats?.reduction?.token_reduction_pct || 0;
+    const quickWinsReduction = this.patternRecognitionResult?.token_reduction_percentage || 0;
+    const entropyReduction = this.entropyResult?.token_reduction_percentage || 0;
 
     this.comparisonResult = {
-      quickWins: this.quickWinsResult,
-      entropy: this.entropyResult,
+      patternRecognition: this.patternRecognitionResult || null,
+      entropy: this.entropyResult as OptimizationResult || null,
       improvement: entropyReduction - quickWinsReduction,
       query: this.query,
       timestamp: new Date()
     };
   }
 
-  getReductionPercentage(result: OptimizationResult | null): number {
-    if (!result) return 0;
-    return result.token_reduction_percentage || 
-           result.stats?.reduction?.token_reduction_pct || 0;
+  private extractErrorMessage(error: unknown): string {
+    return this.extractError(error);
   }
 
-  getProcessingTime(result: OptimizationResult | null): number {
-    if (!result) return 0;
-    return result.processing_time_ms || 
-           result.stats?.processing_time_ms || 0;
+  private extractError(err: any): string {
+    return (
+      err?.error?.metadata?.error ||
+      err?.error?.detail ||
+      err?.message ||
+      'Unknown error'
+    );
   }
 
-  getOriginalTokens(result: OptimizationResult | null): number {
-    if (!result) return 0;
-    return result.stats?.original?.tokens || 0;
+  // Strict-safe getters
+  get entropyPct(): number {
+    return Math.round(100 * (this.entropyResult?.token_reduction_percentage ?? 0));
   }
 
-  getFinalTokens(result: OptimizationResult | null): number {
-    if (!result) return 0;
-    return result.stats?.final?.tokens || 0;
+  get patternPct(): number {
+    return Math.round(100 * (this.patternRecognitionResult?.token_reduction_percentage ?? 0));
+  }
+
+  get entropyConfidence(): number {
+    const confidence = this.entropyResult?.confidence ??
+                     this.entropyResult?.entropy_analysis?.confidence ?? 0;
+    return Math.max(0, Math.min(1, confidence));
+  }
+
+  get entropyChunks(): string[] {
+    return this.entropyResult?.optimized_context ?? [];
+  }
+
+  get patternChunks(): string[] {
+    return this.patternRecognitionResult?.optimized_context ?? [];
+  }
+
+  get hasEntropyError(): boolean {
+    return !!(this.entropyResult?.metadata?.['error'] as string);
+  }
+
+  get entropyErrorMsg(): string {
+    return (this.entropyResult?.metadata?.['error'] as string) || '';
+  }
+
+  get hasPatternError(): boolean {
+    return !!(this.patternRecognitionResult?.error);
+  }
+
+  get patternErrorMsg(): string {
+    return this.patternRecognitionResult?.error || '';
+  }
+
+  get entropyDimensionEntries(): [string, number][] {
+    if (!this.entropyResult?.entropy_analysis?.dimension_entropies) {
+      return [];
+    }
+    return Object.entries(this.entropyResult.entropy_analysis.dimension_entropies) as [string, number][];
   }
 
   calculateCostSavings(reductionPct: number, originalTokens: number): number {
@@ -223,9 +268,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this.scenarioManager.getScenariosByCategory(category);
   }
 
-  // Helper for template
-  Object = Object;
-
   exportResults(): void {
     if (!this.comparisonResult) return;
 
@@ -233,17 +275,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
       scenario: this.selectedScenario?.name || 'Custom Query',
       query: this.comparisonResult.query,
       timestamp: this.comparisonResult.timestamp,
-      quickWins: {
-        reduction: this.getReductionPercentage(this.comparisonResult.quickWins),
-        processingTime: this.getProcessingTime(this.comparisonResult.quickWins),
-        originalTokens: this.getOriginalTokens(this.comparisonResult.quickWins),
-        finalTokens: this.getFinalTokens(this.comparisonResult.quickWins)
+      patternRecognition: {
+        reduction: this.patternPct,
+        processingTime: this.patternRecognitionResult?.processing_time_ms || 0,
+        originalTokens: 0, // Will need to extract from stats if available
+        finalTokens: 0     // Will need to extract from stats if available
       },
       entropy: {
-        reduction: this.getReductionPercentage(this.comparisonResult.entropy),
-        processingTime: this.getProcessingTime(this.comparisonResult.entropy),
-        originalTokens: this.getOriginalTokens(this.comparisonResult.entropy),
-        finalTokens: this.getFinalTokens(this.comparisonResult.entropy)
+        reduction: this.entropyPct,
+        processingTime: this.entropyResult?.processing_time_ms || 0,
+        originalTokens: this.entropyResult?.original_count || 0,
+        finalTokens: this.entropyResult?.optimized_count || 0
       },
       improvement: this.comparisonResult.improvement
     };
@@ -256,4 +298,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     link.click();
     window.URL.revokeObjectURL(url);
   }
+
+  // TrackBy function for ngFor performance
+  trackByIndex = (_: number, __: unknown) => _;
+
+  // Helper for template
+  Object = Object;
 }
